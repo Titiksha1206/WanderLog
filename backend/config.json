@@ -1,3 +1,3 @@
 {
-  "connectionstring" : "mongodb+srv://titiksha12062003:EPzm6uGguWFxdRgQ@wanderlog.rwiqt.mongodb.net/?retryWrites=true&w=majority&appName=WanderLog"
+  "connectionstring" : "mongodb+srv://titiksha12062003:0FB5DnMNxq8B5jnU@wanderlog.rwiqt.mongodb.net/?retryWrites=true&w=majority&tlsAllowInvalidCertificates=true&appName=WanderLog"
 }
