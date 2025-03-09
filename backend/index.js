@@ -6,6 +6,8 @@ import mongoose from 'mongoose';
 
 import 'dotenv/config';
 
+import {authenticateToken} from './utilities.js';
+
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const config = require('./config.json');
@@ -96,9 +98,22 @@ app.post("/login", async (req, res) => {
             });
 });
 
+// get User API
+app.get('/get-user', authenticateToken ,async (req, res) => {
+    const {userId} = req.user;
+
+    const isUser = await User.findOne({ _id : userId});
+
+    if(!isUser) {
+        return res.sendStatus(401);
+    }
+
+    return res.json({user: isUser, message: ""});
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+
 export {app};
