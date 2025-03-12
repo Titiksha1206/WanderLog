@@ -4,7 +4,7 @@ import Login from './pages/Auth/Login'
 import SignUp from './pages/Auth/SignUp'
 import Home from './pages/Home/Home'
 
-function App() {
+function App() => {
   return ( 
     <BrowserRouter>
     <Routes>
@@ -15,5 +15,18 @@ function App() {
   </BrowserRouter>
   )
 }
+
+//Define the Root component to handle the initial redirect
+const Root = () => {
+    //check if token exists in localStorage
+    const isAuthenticated = !!localStorage.getItem("token");
+
+    //redirect to direct if authenticated, otherwise to login
+    return isAuthenticated ? (
+        <Navigate to = "/dashboard" />
+    ) : (
+        <Navigate to= "/login" />
+    );
+};
 
 export default App
