@@ -133,6 +133,13 @@ app.post("/add-travel-story", authenticateToken, async (req, res) => {
   const { title, story, visitedLocation, visitedDate, imageUrl } = req.body;
   const { userId } = req.user;
 
+//Edit Travel Story 
+app.post("/edit-story/:id", authenticateToken, async(req, res) => {
+    const { id } = req.params;
+    const { title, story, visitedLocation, imageUrl, visitedDate } = req.body;
+    const { userId } = req.user;
+  
+
   // validate required fields
   if (!title || !story || !visitedLocation || !visitedDate || !imageUrl) {
     return res
@@ -140,7 +147,7 @@ app.post("/add-travel-story", authenticateToken, async (req, res) => {
       .json({ error: true, message: "ALL FIELDS ARE REQUIRED" });
   }
 
-  // convert visitedDate from milliseconds to Date object
+  /* convert visitedDate from milliseconds to Date object
   const parsedVisitedDate = new Date(parseInt(visitedDate));
 
   try {
@@ -160,7 +167,8 @@ app.post("/add-travel-story", authenticateToken, async (req, res) => {
   } catch (error) {
      res.status(400).json({ error: true, message: error.message });
   }
-});
+}); */
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
