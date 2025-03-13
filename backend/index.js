@@ -18,7 +18,6 @@ const config = require("./config.json");
 
 import { User } from "./models/user.model.js";
 import { TravelStory } from "./models/travelStory.model.js";
-import { error } from "console";
 
 mongoose.connect(config.connectionstring);
 
