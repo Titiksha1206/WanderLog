@@ -1,10 +1,10 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import React from 'react'
 import Login from './pages/Auth/Login'
 import SignUp from './pages/Auth/SignUp'
 import Home from './pages/Home/Home'
 
-function App() => {
+const App = () => {
   return ( 
     <BrowserRouter>
     <Routes>
