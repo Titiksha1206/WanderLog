@@ -5,8 +5,12 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
 import "dotenv/config";
+import { fileURLToPath } from "url";
+import path from "path";
+import fs from "fs";
 
 import { authenticateToken } from "./utilities.js";
+import { upload } from "./multer.js";
 
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
@@ -14,6 +18,7 @@ const config = require("./config.json");
 
 import { User } from "./models/user.model.js";
 import { TravelStory } from "./models/travelStory.model.js";
+import { error } from "console";
 
 mongoose.connect(config.connectionstring);
 
@@ -128,17 +133,61 @@ app.get("/get-user", authenticateToken, async (req, res) => {
   return res.json({ user: isUser, message: "" });
 });
 
+// Route to handle image upload
+app.post("/image-upload", upload.single("image"), async (req, res) => {
+  try {
+    if (!req.file){
+     return res.status(400).json({error: true, message: "No Image Uploaded"});
+    } 
+   const imageUrl = `http://localhost:8000/uploads/${req.file.path}`;
+   res.status(201).json({ imageUrl });
+  }
+  catch (error) {
+    res.status(500).json({ error: true, message: error.message });
+  }
+});
+
+// Delete an image from uploads folder
+app.delete("/delete-image", async (req, res) => {
+ const {imageUrl} = req.query;
+ if (!imageUrl){
+  return res.status(400).json({error: true, message: "ImageURL Parameter is required"});
+ }
+
+  try {
+  // extract the filename from the image url
+  const filename = path.basename(imageUrl);
+  
+  //define the file path
+  const filePath = path.join(__dirname, "uploads", filename);
+
+  // check if the file exists
+  if (fs.existsSync(filePath)){
+  
+    // delete the file from the uploads folder
+    fs.unlinkSync(filePath);
+    res.status(200).json({ message: "Image deleted successfully" });
+  } 
+  else {
+    res.status(200).json({ error: true, message: "Image not found" });
+  }
+  } 
+  catch (error) {
+  res.status(500).json({ error: true, message: error.message });
+  }
+});
+
+// Serve static files from the uploads and assets directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/assets", express.static(path.join(__dirname, "assets")));
+
 // ADD travel story
 app.post("/add-travel-story", authenticateToken, async (req, res) => {
   const { title, story, visitedLocation, visitedDate, imageUrl } = req.body;
   const { userId } = req.user;
-
-//Edit Travel Story 
-app.post("/edit-story/:id", authenticateToken, async(req, res) => {
-    const { id } = req.params;
-    const { title, story, visitedLocation, imageUrl, visitedDate } = req.body;
-    const { userId } = req.user;
-  
 
   // validate required fields
   if (!title || !story || !visitedLocation || !visitedDate || !imageUrl) {
@@ -147,7 +196,7 @@ app.post("/edit-story/:id", authenticateToken, async(req, res) => {
       .json({ error: true, message: "ALL FIELDS ARE REQUIRED" });
   }
 
-  /* convert visitedDate from milliseconds to Date object
+  //convert visitedDate from milliseconds to Date object
   const parsedVisitedDate = new Date(parseInt(visitedDate));
 
   try {
@@ -167,9 +216,22 @@ app.post("/edit-story/:id", authenticateToken, async(req, res) => {
   } catch (error) {
      res.status(400).json({ error: true, message: error.message });
   }
-}); */
+}); 
 
-//convert visitedDate from miliseconds to Date object
+//Edit Travel Story 
+app.put("/edit-story/:id", authenticateToken, async(req, res) => {
+    const { id } = req.params;
+    const { title, story, visitedLocation, imageUrl, visitedDate } = req.body;
+    const { userId } = req.user;
+  
+    // validate required fields
+    if (!title || !story || !visitedLocation || !visitedDate || !imageUrl) {
+    return res
+      .status(400)
+      .json({ error: true, message: "ALL FIELDS ARE REQUIRED" });
+    }
+
+    //convert visitedDate from miliseconds to Date object
     const parsedVisitedDate = new Date (parseInt(visitedDate));
 
     try{
@@ -193,9 +255,22 @@ app.post("/edit-story/:id", authenticateToken, async(req, res) => {
     }catch (error) {
         res.status(500).json({error: true, message:error.message});
     }
-  } );
+});
 
+// Get all travel stories
+app.get("/get-all-stories", authenticateToken, async (req, res) => {
+  const { userId } = req.user;
+
+    try {
+      const travelStories = await TravelStory.find({ userId : userId }).sort({
+        isFavourite : -1,
+      });
+      res.status(200).json({ stories : travelStories });
+    } catch (error) {
+      res.status(500).json({ error: true, message: error.message });
+    }
   
+});
 
 //Delete a Travel Story
  app.delete("/delete-story/:id", authenticateToken, async(req, res) => {
@@ -207,20 +282,21 @@ app.post("/edit-story/:id", authenticateToken, async(req, res) => {
         const travelStory = await TravelStory.findOne({ _id: id, userId: userId });
 
         if(!travelStory){
-            return res.status(404).json({error: true, message:"Travel story not found"});
+            return res.status(404).json({error: true, message: "Travel story not found" });
         }
+
         //Delete the travel story from the database
         await travelStory.deleteOne({_id: id, userId: userId});
 
         //Extract the filename from imageUrl 
         const imageUrl = travelStory.imageUrl;
-        const filename = Path2D.basename(imageUrl);
+        const filename = path.basename(imageUrl);
 
         //define the file path 
-        const filePath = Path2D.join(__dirname,'uploads',filename);
+        const filePath = path.join(__dirname,'uploads',filename);
 
         //delete the image file from the uploads folder 
-        FileSystem.unlink(filePath,(err)=> {
+        fs.unlink(filePath, (err)=> {
             if (err){
                 console.error("Failed to delete image file:",err);
                 //Optionally, you could still respond with a success status here
@@ -229,22 +305,21 @@ app.post("/edit-story/:id", authenticateToken, async(req, res) => {
         });
         res.status(200).json({message:"Travel story deleted successfully"});
     } catch (error){
-        res.status(500).json({error: true, message:error.message});
+        res.status(500).json({error: true, message: error.message});
     }
-  })
+});
 
-
-  //Update isFavourite
+//Update isFavourite
  app.put("/update-is-favourite/:id", authenticateToken, async(req, res) => {
-    const { id } =req.params;
+    const { id } = req.params;
     const { isFavourite } = req.body;
-    const { iserId} = req.user;
+    const { userId} = req.user;
 
     try{
         const travelStory = await TravelStory.findOne({_id: id, userId: userId});
 
         if(!travelStory){
-            return res.status(404).json({error: true,message: "Travel story not found"});
+            return res.status(404).json({error: true, message: "Travel story not found"});
         }
 
         travelStory.isFavourite = isFavourite;
@@ -252,14 +327,13 @@ app.post("/edit-story/:id", authenticateToken, async(req, res) => {
         await travelStory.save();
         res.status(200).json({story:travelStory,message:'Update Successful' });
     } catch (error){
-        res.status(500).json({error: true, message:error.message});
+        res.status(500).json({error: true, message: error.message});
     }
-    })
-
+});
 
 //Search travel stories
- app.post("/search/:id", authenticateToken, async(req, res) => {
-    const { query }=req.query;
+ app.get("/search", authenticateToken, async(req, res) => {
+    const { query }= req.query;
     const { userId } = req.user;
 
     if (!query) {
@@ -271,17 +345,16 @@ app.post("/edit-story/:id", authenticateToken, async(req, res) => {
             userId: userId,
             $or: [
                 {  title: { $regex: query, $options: "i" }},
-       {  story: { $regex: query, $options: "i" }},
+                {  story: { $regex: query, $options: "i" }},
                 { visitedLocation: { $regex: query, $options: "i" }},
-            ],
+              ],
         }).sort({ isFavourite: -1});
 
         res.status(200).json({stories: searchResults});
     }catch (error){
-        res.status(500).json({error: true, message:error.message});
+        res.status(500).json({error: true, message: error.message});
     }
- })  
-
+});
 
 //Filter travel stories by date range
  app.get("/travel-stories/filter", authenticateToken, async(req, res) => {
@@ -301,11 +374,9 @@ app.post("/edit-story/:id", authenticateToken, async(req, res) => {
 
             res.status(200).json({stories: filteredStories});
         }catch (error){
-            res.status(500).json({error: true, message:error.message});
+            res.status(500).json({error: true, message: error.message});
         }
-    });      
-  
-  
+});      
   
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
