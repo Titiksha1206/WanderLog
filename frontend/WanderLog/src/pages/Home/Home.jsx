@@ -18,19 +18,38 @@ const Home = () => {
         setUserInfo(response.data.user);
       }
     } catch (error) {
-      if(error.response.status === 401){
-        // clear storage if unauthorized
-        localStorage.clear();
-        // redirect to login
-        navigate('/login');
+      if (error.response) {
+        if (error.response.status === 401) {
+          localStorage.clear();
+          navigate("/login");
+        }
+      } else if (error.request) {
+        console.error("No response received from server:", error.request);
+      } else {
+        console.error("Error in setting up the request:", error.message);
       }
     }
   };
 
-  useEffect(()=>{
+  // get all travel stories
+  const getAllTravelStories = async () => {
+    try {
+      const response = await axiosInstance.get("/get-all-stories");
+      if (response.data && response.data.stories) {
+        //set all stories if data exists
+        setAllStories(response.data.stories);
+      }
+    } catch (error) {
+      // console.log("An unexpected error occur, please try again");
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllTravelStories();
     getUserInfo();
     return () => {};
-  },[]);
+  }, []);
 
   return (
     <>

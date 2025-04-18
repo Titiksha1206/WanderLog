@@ -5,56 +5,56 @@ import { validateEmail } from "../../utils/helper";
 import axiosInstance from "../../utils/axiosInstance";
 
 const Login = () => {
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [error, setError] = useState(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
-  // const handleLogin = async (e) => {
-  //     e.preventDefault();
+  const handleLogin = async (e) => {
+      e.preventDefault();
 
-  //     if(!validateEmail(email)){
-  //         setError("Please enter a valid email address.");
-  //         return;
-  //     }
+      if(!validateEmail(email)){
+          setError("Please enter a valid email address.");
+          return;
+      }
 
-  //     if(!password){
-  //         setError("Please enter the password");
-  //         return;
-  //     }
-  //     setError("");
+      if(!password){
+          setError("Please enter the password");
+          return;
+      }
+      setError("");
 
-  //     //Login API Call
-  //     try{
-  //         const response = await axiosInstance.post("/login", {
-  //         email: email ,
-  //         password: password,
-  //         });
+      //Login API Call
+      try{
+          const response = await axiosInstance.post("/login", {
+          email: email,
+          password: password,
+          });
 
-  //         //handle successful login response
-  //         if(response.data && response.data.accessToken); {
-  //         localStorage.setItem("token", response.data.accessToken);
-  //         navigate("/dashboard");
-  //     }
-  // } catch (error) {
-  //     //Handle login error
-  //     if(
-  //         error.response &&
-  //         error.responsne.data &&
-  //         error.response.data.message
-  //     ){
-  //         setError(error.response.data.message);
-  //     } else {
-  //         setError("An unexpected error occured. Please try again.");
-  //     }
-  // }
-  // };
+          //handle successful login response
+          if(response.data && response.data.accessToken); {
+          localStorage.setItem("token", response.data.accessToken);
+          navigate("/dashboard");
+      }
+  } catch (error) {
+      //Handle login error
+      if(
+          error.response &&
+          error.responsne.data &&
+          error.response.data.message
+      ){
+          setError(error.response.data.message);
+      } else {
+          setError("An unexpected error occured. Please try again.");
+      }
+  }
+  };
 
   return (
     <div className="h-screen bg-cyan-50 overflow-hidden relative">
-      {/* <div className= "login-ui-box right-10 -top-40" />
-          <div className="login-ui-box bg-cyan-200 -bottom-40 right-1/2" /> */}
+      <div className= "login-ui-box right-10 -top-40" />
+          <div className="login-ui-box bg-cyan-200 -bottom-40 right-1/2" />
 
       <div className="container h-screen flex items-center justify-center px-20 mx-auto">
         <div className="w-2/4 h-[90vh] flex items-end bg-[url('./src/assets/images/login.jpeg')] bg-cover bg-center rounded-lg p-10 z-50">

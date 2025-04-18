@@ -5,59 +5,59 @@ import { validateEmail } from "../../utils/helper";
 import axiosInstance from "../../utils/axiosInstance";
 
 const SignUp = () => {
-//   const [name, setName] = useState("");
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [error, setError] = useState(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
-//   const navigate = useNavigate();
+  const navigate = useNavigate();
 
-//   const handleSignUp = async (e) => {
-//     e.preventDefault();
+  const handleSignUp = async (e) => {
+    e.preventDefault();
 
-//     if (!name) {
-//       setError("Please enter your name");
-//       return;
-//     }
+    if (!name) {
+      setError("Please enter your name");
+      return;
+    }
 
-//     if (!validateEmail(email)) {
-//       setError("Please enter a valid email address.");
-//       return;
-//     }
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
 
-//     if (!password) {
-//       setError("Please enter the password");
-//       return;
-//     }
-//     setError("");
+    if (!password) {
+      setError("Please enter the password");
+      return;
+    }
+    setError("");
 
-//     //SignUp API Call
-//     try {
-//       const response = await axiosInstance.post("/create-account", {
-//         fullName: name,
-//         email: email,
-//         password: password,
-//       });
+    //SignUp API Call
+    try {
+      const response = await axiosInstance.post("/create-account", {
+        fullName: name,
+        email: email,
+        password: password,
+      });
 
-//       //handle successful login response
-//       if (response.data && response.data.accessToken);
-//       {
-//         localStorage.setItem("token", response.data.accessToken);
-//         navigate("/dashboard");
-//       }
-//     } catch (error) {
-//       //Handle login error
-//       if (
-//         error.response &&
-//         error.responsne.data &&
-//         error.response.data.message
-//       ) {
-//         setError(error.response.data.message);
-//       } else {
-//         setError("An unexpected error occured. Please try again.");
-//       }
-//     }
-//   };
+      //handle successful login response
+      if (response.data && response.data.accessToken);
+      {
+        localStorage.setItem("token", response.data.accessToken);
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      //Handle login error
+      if (
+        error.response &&
+        error.responsne.data &&
+        error.response.data.message
+      ) {
+        setError(error.response.data.message);
+      } else {
+        setError("An unexpected error occured. Please try again.");
+      }
+    }
+  };
 
   return (
     <div className="h-screen bg-cyan-50 overflow-hidden relative">
