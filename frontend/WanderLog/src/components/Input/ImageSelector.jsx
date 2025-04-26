@@ -6,12 +6,36 @@ const ImageSelector = ({ image, setImage }) => {
   const inputRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  const handleImageChange = () => {};
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if(file){
+      setImage(file);
+    }
+  };
 
   const onChooseFile = {} => {
     inputRef.current.click();
   };
 
+  useEffect(() => {
+    //If the image prop is a string (URL), set it as the preview URL
+    if(typeof image === 'string'){
+      setPreviewUrl(image);
+    }else if (image) {
+      //if the image prop is a File object, create a preview URL
+      setPreviewUrl(URL.createObjectURL(image));
+    } else {
+      //if there is no image,clear the preview URL
+      setPreviewUrl(null);
+    } 
+
+    return () => {
+      if(previewUrl && typeof previewUrl === "string" && !image){
+         URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [image]);
+  
   return (
     <div>
     <input 
@@ -22,7 +46,7 @@ const ImageSelector = ({ image, setImage }) => {
 className = "hidden"
       />
 
-  <button 
+  {!image ? <button 
     className="w-full h-[220px] flex flex-col items-center justify-center gap-4 bg-slate-50 rounded border border-slate-200/50" 
     onClick={() => onChooseFile()}
     >
@@ -31,7 +55,11 @@ className = "hidden"
     </div>
     
   <p className="text-sm text-slate-500">Browse image files to upload</p>
-    </button>
+    </button> :
+<div className="w-full relative">
+<img src={previewUrl} alt="Selected" className="" />
+</div>    
+  }
     </div>
   );
 };
