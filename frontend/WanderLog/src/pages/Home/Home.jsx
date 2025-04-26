@@ -11,12 +11,12 @@ const Home = () => {
   const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState(null);
-  const [allStories, setAllStories] = useState([]);
-  const [openAddEditModal, setOpenAddEditModal] = useState({
-    isShown: false,
-    type: "add",
-    data: null,
-  });
+  // const [allStories, setAllStories] = useState([]);
+  // const [openAddEditModal, setOpenAddEditModal] = useState({
+  //   isShown: false,
+  //   type: "add",
+  //   data: null,
+  // });
 
   //get user info
   const getUserInfo = async () => {
@@ -27,65 +27,66 @@ const Home = () => {
         setUserInfo(response.data.user);
       }
     } catch (error) {
-      if (error.response) {
         if (error.response.status === 401) {
+          //clear storage if unauthorized.
           localStorage.clear();
-          navigate("/login");
+          navigate("/login"); // redirect to login
         }
-      } else if (error.request) {
-        console.error("No response received from server:", error.request);
-      } else {
-        console.error("Error in setting up the request:", error.message);
-      }
-    }
+        else if (error.request) {
+         console.error("No response received from server:", error.request);
+        }  
+        else {
+         console.error("Error in setting up the request:", error.message);
+        }
+      } 
   };
 
   // get all travel stories
-  const getAllTravelStories = async () => {
-    try {
-      const response = await axiosInstance.get("/get-all-stories");
-      if (response.data && response.data.stories) {
-        //set all stories if data exists
-        setAllStories(response.data.stories);
-      }
-    } catch (error) {
-      // console.log("An unexpected error occur, please try again");
-      console.log(error);
-    }
-  };
+  // const getAllTravelStories = async () => {
+  //   try {
+  //     const response = await axiosInstance.get("/get-all-stories");
+  //     if (response.data && response.data.stories) {
+  //       //set all stories if data exists
+  //       setAllStories(response.data.stories);
+  //     }
+  //   } catch (error) {
+  //     // console.log("An unexpected error occur, please try again");
+  //     console.log(error);
+  //   }
+  // };
 
   // handle edit story clicks
-  const handleEdit = (data) => {
-    navigate(`/edit-story/${storyId}`);
-  };
+  // const handleEdit = (data) => {
+  //   navigate(`/edit-story/${data.id}`);
+  // };
 
   // handle travel story click
-  const handleViewStory = (data) => {
-    navigate(`/travel-story/${data.id}`);
-  };
+  // const handleViewStory = (data) => {
+  //   navigate(`/travel-story/${data.id}`);
+  // };
 
   // handle update favourite
-  const updateIsFavourite = async (storyData) => {
-    const storyId = storyData._id;
-    try {
-      const response = await axiosInstance.put(
-        "/update-is-favourite" + storyId,
-        { isFavourite: !storyData.isFavourite }
-      );
-      if (response.data && response.data.story) {
-        toast.success("story updated successfully");
-        getAllTravelStories();
+  // const updateIsFavourite = async (storyData) => {
+  //   const storyId = storyData._id;
+  //   try {
+  //     const response = await axiosInstance.put(
+  //       "/update-is-favourite" + storyId,
+  //       { isFavourite: !storyData.isFavourite }
+  //     );
+  //     if (response.data && response.data.story) {
+  //       toast.success("story updated successfully");
+  //       getAllTravelStories();
 
-        //update favourite status
-        // setFavouriteStatus(response.data.success);
-      }
-    } catch (error) {
-      console.log("An unexpected error occurred. Please try again.");
-    }
-  };
+  //       //update favourite status
+  //       // setFavouriteStatus(response.data.success);
+  //     }
+  //   } catch (error) {
+  //     console.log("An unexpected error occurred. Please try again.");
+  //   }
+  // };
 
   useEffect(() => {
-    getAllTravelStories();
+    // getAllTravelStories();
     getUserInfo();
     return () => {};
   }, []);
@@ -93,7 +94,7 @@ const Home = () => {
   return (
     <>
       <Navbar userInfo={userInfo} />
-      <div className="container mx-auto py-10">
+      {/* <div className="container mx-auto py-10">
         <div className="flex gap-7">
           <div className="flex-1">
             {allStories.length > 0 ? (
@@ -122,9 +123,9 @@ const Home = () => {
 
           <div className="w-[320px]"></div>
         </div>
-      </div>
+      </div> */}
 
-      <Modal
+      {/* <Modal
         isOpen={openAddEditModal.isShown}
         onRequestClose={() => {}}
         style={{
@@ -144,18 +145,18 @@ const Home = () => {
         }}
         getAllEditTravelStories= {getAllTravelStories}
         />
-      </Modal>
+      </Modal> */}
 
-      <button
+      {/* <button
         className="w-16 h-16 flex items-center justify-center rounded-full bg-primary hover:bg-cyan-400 fixed right-10  bottom-10"
         onClick={() => {
           setOpenAddEditModal({ isShown: true, type: "add", data: null });
         }}
       >
         <MdAdd className="text-[32px] text-white" />
-      </button>
+      </button> */}
 
-      <ToastContainer></ToastContainer>
+      {/* <ToastContainer></ToastContainer> */}
     </>
   );
 };
