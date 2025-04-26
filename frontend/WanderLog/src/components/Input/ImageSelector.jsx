@@ -17,6 +17,15 @@ const ImageSelector = ({ image, setImage }) => {
     inputRef.current.click();
   };
 
+  const onChooseFile = () => {
+    inputRef.current.click();
+  };
+
+const handleRemoveImage = () => {
+  setImage(null);
+  handleDeleteImg()
+}
+  
   useEffect(() => {
     //If the image prop is a string (URL), set it as the preview URL
     if(typeof image === 'string'){
@@ -56,10 +65,18 @@ className = "hidden"
     
   <p className="text-sm text-slate-500">Browse image files to upload</p>
     </button> :
+    ) : (
 <div className="w-full relative">
-<img src={previewUrl} alt="Selected" className="" />
+<img src={previewUrl} alt="Selected" className="w-full h-[300px] object-cover rounded-lg" />
+
+  <button 
+    className="btn-small btn-delete absolute top-2 right-2"
+    onClick={handleRemoveImage}
+    >
+      <MdDeleteOutline className="text-lg" />
+  </button>
 </div>    
-  }
+  )}
     </div>
   );
 };
