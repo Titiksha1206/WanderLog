@@ -15,7 +15,11 @@ const AddEditTravelStory = ({
     const [visitedDate, setVisitedDate] = useState(null);
     
     const handleAddOrUpdateClick = () => {};
-        return  
+
+    //Delete story image and update the story
+    const handleDeleteStoryImg = async () => {}
+    
+        return  (
         <div>
             <div className="flex items-center justify-between">  
                 <h5 className="text-xl font-medium text-slate-700">
@@ -55,7 +59,11 @@ const AddEditTravelStory = ({
                     <DateSelector date= {visitedDate} setDate={setvisitedDate} />
                       </div>
 
-                    <ImageSelector image={storyImg} setImage={setStoryImg} />
+                    <ImageSelector 
+                        image={storyImg} 
+                        setImage={setStoryImg} 
+                        handleDeleteImg= {handleDeleteStoryImg} 
+                        />
                         
                         <div className="flex flex-col gap-2 mt-4">
                         <label classsName="input-label">STORY</label>
@@ -68,6 +76,11 @@ const AddEditTravelStory = ({
                             onChange={({ target }) => setStory(target.value)}
                             />
                         </div>
+
+                    <div className="pt-3">
+                        <label className="input-label"> VISITED LOCATIONS</label>
+                        <TagInput tags= {visitedLocation} setTags={setVisitedLocation} />
+                    </div>
                     </div>
                 </div>
         </div>;
