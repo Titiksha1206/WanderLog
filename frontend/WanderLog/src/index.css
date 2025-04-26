@@ -19,6 +19,21 @@ body {
 }
 }
 
+/* Custom scrollbar styles*/
+.scrollbar::-webkit-scrollbar {
+    width:3px;
+    height:3px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    background-color: #057c8e; /*change this to your desired color*/
+    border-radius: 3px;
+}
+
+.scrollbar::-webkit-track {
+    background-color: rgb(172,201,299);
+}
+
 @layer components {
     .input-box{
 
@@ -35,5 +50,13 @@ body {
 
     .login-ui-box{
         @apply w-80 h-[450] rounded-full bg-primary absolute rotate-45
+    }
+    
+    .model-box {
+        @apply w-[80vw] md:w-[40%] h-[80vh] bg-white rounded-lg mx auto mt-14 p-5 overflow-y-scroll scrollbar z-50;
+    }
+
+    .icon-btn{ 
+        @apply text-[22px] text-slate-300 cursor-pointer hover:text-red-500;
     }
 }
