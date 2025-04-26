@@ -2,12 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import axiosInstance from "../../utils/axiosInstance";
+import { ToastContainer, toast } from "react-toastify";
+import { MdAdd } from "react-icons/md";
+import Modal from "react-modal";
+import TravelStoryCard from "../../components/Cards/TravelStoryCard";
 
 const Home = () => {
   const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState(null);
   const [allStories, setAllStories] = useState([]);
+  const [openAddEditModal, setOpenAddEditModal] = useState({
+    isShown: false,
+    type: "add",
+    data: null,
+  });
 
   //get user info
   const getUserInfo = async () => {
@@ -45,6 +54,36 @@ const Home = () => {
     }
   };
 
+  // handle edit story clicks
+  const handleEdit = (data) => {
+    navigate(`/edit-story/${storyId}`);
+  };
+
+  // handle travel story click
+  const handleViewStory = (data) => {
+    navigate(`/travel-story/${data.id}`);
+  };
+
+  // handle update favourite
+  const updateIsFavourite = async (storyData) => {
+    const storyId = storyData._id;
+    try {
+      const response = await axiosInstance.put(
+        "/update-is-favourite" + storyId,
+        { isFavourite: !storyData.isFavourite }
+      );
+      if (response.data && response.data.story) {
+        toast.success("story updated successfully");
+        getAllTravelStories();
+
+        //update favourite status
+        // setFavouriteStatus(response.data.success);
+      }
+    } catch (error) {
+      console.log("An unexpected error occurred. Please try again.");
+    }
+  };
+
   useEffect(() => {
     getAllTravelStories();
     getUserInfo();
@@ -56,11 +95,60 @@ const Home = () => {
       <Navbar userInfo={userInfo} />
       <div className="container mx-auto py-10">
         <div className="flex gap-7">
-          <div className="flex-1"></div>
+          <div className="flex-1">
+            {allStories.length > 0 ? (
+              <div className="grid grid-cols-4 gap-4">
+                {allStories.map((item) => {
+                  return (
+                    <TravelStoryCard
+                      key={item._id}
+                      imageUrl={item.imageUrl}
+                      title={item.title}
+                      story={item.story}
+                      date={item.date}
+                      visitedLocation={item.visitedLocation}
+                      isFavourite={item.isFavourite}
+                      onEdit={() => handleEdit(item)}
+                      onClick={() => handleViewStory(item)}
+                      onFavouriteClick={() => updateIsFavourite(item)}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              <> Empty card here</>
+            )}
+          </div>
 
           <div className="w-[320px]"></div>
         </div>
       </div>
+
+      <Modal
+        isOpen={openAddEditModal.isShown}
+        onRequestClose={() => {}}
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0,0,0,0.2)",
+            zIndex: 999,
+          },
+        }}
+        appElement={document.getElementById("root")}
+        className="model-box"
+      >
+        <AddEditTravelStory/>
+      </Modal>
+
+      <button
+        className="w-16 h-16 flex items-center justify-center rounded-full bg-primary hover:bg-cyan-400 fixed right-10  bottom-10"
+        onClick={() => {
+          setOpenAddEditModal({ isShown: true, type: "add", data: null });
+        }}
+      >
+        <MdAdd className="text-[32px] text-white" />
+      </button>
+
+      <ToastContainer></ToastContainer>
     </>
   );
 };

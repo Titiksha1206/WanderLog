@@ -49,7 +49,10 @@ body {
     }
 
     .login-ui-box{
-        @apply w-80 h-[450] rounded-full bg-primary absolute rotate-45
+        @apply w-80 h-[450] rounded-full bg-primary absolute rotate-45;
+    }
+    .icon-btn{
+        @apply text-[22px] text-slate-300 cursor-pointer hover:text-red-500;
     }
     
     .model-box {
