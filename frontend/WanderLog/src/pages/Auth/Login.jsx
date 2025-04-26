@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import PasswordInput from "../../components/Input/PasswordInput.jsx";
+import PasswordInput from "../../components/Input/PasswordInput";
 import { useNavigate } from "react-router-dom";
 import { validateEmail } from "../../utils/helper";
 import axiosInstance from "../../utils/axiosInstance";
@@ -33,23 +33,24 @@ const Login = () => {
           });
 
           //handle successful login response
-          if(response.data && response.data.accessToken); {
+          if(response.data && response.data.accessToken) {
           localStorage.setItem("token", response.data.accessToken);
           navigate("/dashboard");
-      }
-  } catch (error) {
-      //Handle login error
-      if(
+          }
+        } 
+      catch (error) {
+        //Handle login error
+        if(
           error.response &&
-          error.responsne.data &&
+          error.response.data &&
           error.response.data.message
-      ){
+        ) {
           setError(error.response.data.message);
-      } else {
+        } else {
           setError("An unexpected error occured. Please try again.");
+        }
       }
-  }
-  };
+ };
 
   return (
     <div className="h-screen bg-cyan-50 overflow-hidden relative">
@@ -69,11 +70,11 @@ const Login = () => {
           </div>
         </div>
 
-        {/* <div className="w-2/4 h-[75vh] bg-white rounded-r-lg relative p-16 shadow-lg shadow-cyan-200/20">
+        <div className="w-2/4 h-[75vh] bg-white rounded-r-lg relative p-16 shadow-lg shadow-cyan-200/20">
           <form onSubmit={handleLogin}>
             <h4 className="text-2xl font-semibold mb-7">Login</h4>
 
-            <input 
+          <input 
           type="text" 
           placeholder="Email" 
           className="input-box" 
@@ -83,9 +84,9 @@ const Login = () => {
              }}
           />
           
-          <PasswordInput value={email}
-            onChange= {({ target }) => {
-                setEmail(target.value);
+          <PasswordInput value={password}
+              onChange={({ target }) => {
+                setPassword(target.value);
              }}
           />
 
@@ -101,13 +102,13 @@ const Login = () => {
               type="submit"
               className="btn-primary btn-light"
               onClick={() => {
-                navigate("signUp");
+                navigate("/signUp");
               }}
             >
               CREATE ACCOUNT
             </button>
           </form>
-        </div> */}
+        </div>
       </div>
     </div>
   );

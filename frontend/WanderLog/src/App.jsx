@@ -9,6 +9,7 @@ const App = () => {
     <BrowserRouter>
     <Routes>
       <Route path="/dashboard" exact element={<Home />} />
+      <Route path="/" exact element={<Root />} />
       <Route path="/Login" exact element={<Login />} />
       <Route path="/SignUp" exact element={<SignUp />} />
     </Routes>
@@ -21,7 +22,7 @@ const Root = () => {
     //check if token exists in localStorage
     const isAuthenticated = !!localStorage.getItem("token");
 
-    //redirect to direct if authenticated, otherwise to login
+    //redirect to dashboard if authenticated, otherwise to login
     return isAuthenticated ? (
         <Navigate to = "/dashboard" />
     ) : (

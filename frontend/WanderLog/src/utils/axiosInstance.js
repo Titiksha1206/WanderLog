@@ -1,3 +1,4 @@
+//conecting backend from frontend
 import axios from "axios";
 import { BASE_URL } from "./constants";
 
@@ -11,7 +12,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     (config) => {
-        const accessToken = localStorage.getItem("token");
+        const accessToken = localStorage.getItem("token")?.trim();
         if(accessToken){
             config.headers.Authorization = `Bearer ${accessToken}`;
         }

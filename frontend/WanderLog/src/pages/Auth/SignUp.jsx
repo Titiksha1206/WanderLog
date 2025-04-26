@@ -34,13 +34,13 @@ const SignUp = () => {
     //SignUp API Call
     try {
       const response = await axiosInstance.post("/create-account", {
-        fullName: name,
+        username: name,
         email: email,
         password: password,
       });
 
       //handle successful login response
-      if (response.data && response.data.accessToken);
+      if (response.data && response.data.accessToken)
       {
         localStorage.setItem("token", response.data.accessToken);
         navigate("/dashboard");
@@ -49,7 +49,7 @@ const SignUp = () => {
       //Handle login error
       if (
         error.response &&
-        error.responsne.data &&
+        error.response.data &&
         error.response.data.message
       ) {
         setError(error.response.data.message);
@@ -77,7 +77,7 @@ const SignUp = () => {
           </div>
         </div>
 
-        {/* <div className="w-2/4 h-[75vh] bg-white rounded-r-lg relative p-16 shadow-lg shadow-cyan-200/20">
+        <div className="w-2/4 h-[75vh] bg-white rounded-r-lg relative p-16 shadow-lg shadow-cyan-200/20">
           <form onSubmit={handleSignUp}>
             <h4 className="text-2xl font-semibold mb-7">SignUp</h4>
 
@@ -102,9 +102,9 @@ const SignUp = () => {
             />
 
             <PasswordInput
-              value={email}
+              value={password}
               onChange={({ target }) => {
-                setEmail(target.value);
+                setPassword(target.value);
               }}
             />
 
@@ -126,7 +126,7 @@ const SignUp = () => {
               LOGIN
             </button>
           </form>
-        </div> */}
+        </div>
       </div>
     </div>
   );

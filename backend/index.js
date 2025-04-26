@@ -111,7 +111,7 @@ app.post("/login", async (req, res) => {
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: "72h" }
   );
-  return res.status(400).json({
+  return res.status(200).json({
     error: false,
     user: { username: user.username, email: user.email },
     accessToken,
