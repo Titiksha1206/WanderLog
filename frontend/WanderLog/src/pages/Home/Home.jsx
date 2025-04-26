@@ -65,4 +65,13 @@ const Home = () => {
   );
 };
 
+<AddEditTravelStory
+  type={openAddEditModel.type}
+  storyInfo={openAddEditModel.data}
+  onClose={() => {
+    setOpenADDEditModel({ isShown: false, type: "add<, date: null }/);
+                        }}
+    getAllEditTravelStories= {getAllTravelStories}
+  />
+
 export default Home;
