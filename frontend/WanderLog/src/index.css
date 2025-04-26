@@ -63,7 +63,16 @@ body {
         @apply text-[22px] text-slate-300 cursor-pointer hover:text-red-500;
     }
 
+    .input-label{
+        @apply text-xs text-slate-400;
+    }
+
     .btn-small{ 
         @apply flex items-center gap-1 text-xs font medium bg-cyan-50 text-primary shadow-cyan-100/0 border border-cyan-100 hover:bg-primary hover:text-white rounded px-3 py-[3px];
     }
+
+    .btn-delete{
+        @apply bg-rose-50 text-rose-500 shadow-roseo100/0 border border-rose-100 hover:bg-rose-500 hover:text-white;
+    }
+    
 }
