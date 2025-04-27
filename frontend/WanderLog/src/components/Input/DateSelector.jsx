@@ -19,7 +19,7 @@ const DateSelector = ({ date, setDate }) => {
       </button>
 
       {openDatePicker && (
-        <div className="overflow-y-scroll p-5 bg-sky-500/80 rounded-lg relative pt-9 mt-3">
+        <div className="overflow-y-scroll p-5 rounded-lg relative pt-9 mt-3">
           <button
             className="w-10 h-10 rounded-full flex items-center justify-center bg-sky-100 hover:bg-sky-200 absolute top-2 right-2"
             onClick={() => {

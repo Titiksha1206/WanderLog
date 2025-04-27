@@ -26,7 +26,6 @@ body {
 
 @layer components {
     .input-box{
-
         @apply w-full text-sm bg-cyan-600/5 rounded px-5 py-3 mb-4 outline-none;
     }
 
@@ -46,7 +45,7 @@ body {
     }
     
     .model-box {
-        @apply w-[80vw] md:w-[40%] h-[80vh] bg-white rounded-lg mx-auto mt-14 p-5 overflow-y-scroll  z-50;
+        @apply w-[80vw] md:w-[40%] h-[80vh] bg-white rounded-lg mx-auto mt-14 p-5 overflow-y-scroll z-50;
     }
 
     .input-label{

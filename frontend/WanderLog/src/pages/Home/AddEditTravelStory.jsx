@@ -1,8 +1,12 @@
-import React, { useState } from 'react';  // Importing useState from React
+import React, { useState } from 'react';  
 import { MdAdd, MdDeleteOutline, MdUpdate, MdClose } from "react-icons/md";
-import DateSelector from "../../components/Input/DateSelector" ; // Assuming these are the correct paths
+import DateSelector from "../../components/Input/DateSelector" ; 
 import ImageSelector from '../../components/Input/ImageSelector';
-import TagInput from '../../components/Input/TagInput';  // Assuming these are the correct paths
+import TagInput from '../../components/Input/TagInput';  
+import moment from 'moment';
+import { ToastContainer, toast } from "react-toastify";
+import axiosInstance from "../../utils/axiosInstance";
+import uploadImage from '../../utils/uploadImage';
 
 const AddEditTravelStory = ({ 
     storyInfo,
@@ -20,13 +24,43 @@ const AddEditTravelStory = ({
     // Add new travel story
     const addNewTravelStory = async () => {
         console.log("Adding new story", { title, storyImg, story, visitedLocation, visitedDate });
-        // Your logic to add a new story goes here
+        //  logic to add a new story 
+        try{
+            let imageUrl = "";
+
+            //upload image if present
+            if(storyImg){
+                const imgUploadRes = await uploadImage(storyImg);
+                //get image Url
+                imageUrl = imgUploadRes.imageUrl || "";
+            }
+            const response = await axiosInstance.post("/add-travel-story", {
+                title,
+                story,
+                imageUrl: imageUrl || "",
+                visitedLocation,
+                visitedDate: visitedDate
+                ? moment(visitedDate).valueOf()
+                : moment().valueOf(),
+            });
+            if(response.data && response.data.story){
+                toast.success("story added successfully");
+                //refresh stories
+                getAllTravelStories();
+                //close modal
+                onClose();
+            }
+        }
+        catch(error){
+            console.error("Error adding new story:", error);
+            toast.error("Failed to add story ❌");
+        }
     };
 
     // Update travel story
     const updateTravelStory = async () => {
         console.log("Updating story", { title, storyImg, story, visitedLocation, visitedDate });
-        // Your logic to update the travel story goes here
+        //  logic to update the travel story 
     };
 
     const handleAddOrUpdateClick = () => {
@@ -54,7 +88,7 @@ const AddEditTravelStory = ({
     // Delete story image and update the story
     const handleDeleteStoryImg = async () => {
         console.log("Deleting story image");
-        // Your logic to delete the story image goes here
+        //  logic to delete the story 
     };
 
     return (
