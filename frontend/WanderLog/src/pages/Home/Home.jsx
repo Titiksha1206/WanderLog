@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { MdAdd } from "react-icons/md";
 import Modal from "react-modal";
 import TravelStoryCard from "../../components/Cards/TravelStoryCard";
+import AddEditTravelStory from "../Home/AddEditTravelStory"
 
 const Home = () => {
   const navigate = useNavigate();
@@ -13,11 +14,11 @@ const Home = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [allStories, setAllStories] = useState([]);
 
-  // const [openAddEditModal, setOpenAddEditModal] = useState({
-  //   isShown: false,
-  //   type: "add",
-  //   data: null,
-  // });
+  const [openAddEditModal, setOpenAddEditModal] = useState({
+    isShown: false,
+    type: "add",
+    data: null,
+  });
 
   //get user info
   const getUserInfo = async () => {
@@ -57,34 +58,34 @@ const Home = () => {
   };
 
   // handle edit story clicks
-  // const handleEdit = (data) => {
-  //   navigate(`/edit-story/${data.id}`);
-  // };
+  const handleEdit = (data) => {
+    navigate(`/edit-story/${data.id}`);
+  };
 
   // handle travel story click
-  // const handleViewStory = (data) => {
-  //   navigate(`/travel-story/${data.id}`);
-  // };
+  const handleViewStory = (data) => {
+    navigate(`/travel-story/${data.id}`);
+  };
 
   // handle update favourite
-  // const updateIsFavourite = async (storyData) => {
-  //   const storyId = storyData._id;
-  //   try {
-  //     const response = await axiosInstance.put(
-  //       "/update-is-favourite" + storyId,
-  //       { isFavourite: !storyData.isFavourite }
-  //     );
-  //     if (response.data && response.data.story) {
-  //       toast.success("story updated successfully");
-  //       getAllTravelStories();
+  const updateIsFavourite = async (storyData) => {
+    const storyId = storyData._id;
+    try {
+      const response = await axiosInstance.put(
+        "/update-is-favourite/" + storyId,
+        { isFavourite: !storyData.isFavourite }
+      );
+      if (response.data && response.data.story) {
+        toast.success("story updated successfully");
+        getAllTravelStories();
 
-  //       //update favourite status
-  //       // setFavouriteStatus(response.data.success);
-  //     }
-  //   } catch (error) {
-  //     console.log("An unexpected error occurred. Please try again.");
-  //   }
-  // };
+        //update favourite status
+        setFavouriteStatus(response.data.success);
+      }
+    } catch (error) {
+      console.log("An unexpected error occurred. Please try again.");
+    }
+  };
 
   useEffect(() => {
     getAllTravelStories();
@@ -128,7 +129,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* <Modal
+      <Modal
         isOpen={openAddEditModal.isShown}
         onRequestClose={() => {}}
         style={{
@@ -141,25 +142,25 @@ const Home = () => {
         className="model-box"
       >
         <AddEditTravelStory 
-        type={openAddEditModel.type}
-        storyInfo={openAddEditModel.data}
+        type={openAddEditModal.type}
+        storyInfo={openAddEditModal.data}
         onClose={() => {
-        setOpenAddEditModel({ isShown: false, type: "add", date: null });
+          setOpenAddEditModal({ isShown: false, type: "add", data: null });
         }}
-        getAllEditTravelStories= {getAllTravelStories}
+        getAllTravelStories= {getAllTravelStories}
         />
-      </Modal> */}
+      </Modal>
 
-      {/* <button
+      <button
         className="w-16 h-16 flex items-center justify-center rounded-full bg-primary hover:bg-cyan-400 fixed right-10  bottom-10"
         onClick={() => {
           setOpenAddEditModal({ isShown: true, type: "add", data: null });
         }}
       >
         <MdAdd className="text-[32px] text-white" />
-      </button> */}
+      </button>
 
-      {/* <ToastContainer></ToastContainer> */}
+      <ToastContainer></ToastContainer>
     </>
   );
 };
