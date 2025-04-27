@@ -11,7 +11,8 @@ const Home = () => {
   const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState(null);
-  // const [allStories, setAllStories] = useState([]);
+  const [allStories, setAllStories] = useState([]);
+
   // const [openAddEditModal, setOpenAddEditModal] = useState({
   //   isShown: false,
   //   type: "add",
@@ -42,18 +43,18 @@ const Home = () => {
   };
 
   // get all travel stories
-  // const getAllTravelStories = async () => {
-  //   try {
-  //     const response = await axiosInstance.get("/get-all-stories");
-  //     if (response.data && response.data.stories) {
-  //       //set all stories if data exists
-  //       setAllStories(response.data.stories);
-  //     }
-  //   } catch (error) {
-  //     // console.log("An unexpected error occur, please try again");
-  //     console.log(error);
-  //   }
-  // };
+  const getAllTravelStories = async () => {
+    try {
+      const response = await axiosInstance.get("/get-all-stories");
+      if (response.data && response.data.stories) {
+        //set all stories if data exists
+        setAllStories(response.data.stories);
+      }
+    } catch (error) {
+      console.log("An unexpected error occur, please try again");
+      // console.log(error);
+    }
+  };
 
   // handle edit story clicks
   // const handleEdit = (data) => {
@@ -86,7 +87,7 @@ const Home = () => {
   // };
 
   useEffect(() => {
-    // getAllTravelStories();
+    getAllTravelStories();
     getUserInfo();
     return () => {};
   }, []);
@@ -94,7 +95,7 @@ const Home = () => {
   return (
     <>
       <Navbar userInfo={userInfo} />
-      {/* <div className="container mx-auto py-10">
+      <div className="container mx-auto py-10">
         <div className="flex gap-7">
           <div className="flex-1">
             {allStories.length > 0 ? (
@@ -103,10 +104,10 @@ const Home = () => {
                   return (
                     <TravelStoryCard
                       key={item._id}
-                      imageUrl={item.imageUrl}
+                      imgUrl={item.imageUrl}
                       title={item.title}
                       story={item.story}
-                      date={item.date}
+                      date={item.visitedDate}
                       visitedLocation={item.visitedLocation}
                       isFavourite={item.isFavourite}
                       onEdit={() => handleEdit(item)}
@@ -117,13 +118,15 @@ const Home = () => {
                 })}
               </div>
             ) : (
-              <> Empty card here</>
+              <div className="flex items-center justify-center h-64 text-gray-500 text-lg">
+      No Travel Stories Found!
+    </div>
             )}
           </div>
 
           <div className="w-[320px]"></div>
         </div>
-      </div> */}
+      </div>
 
       {/* <Modal
         isOpen={openAddEditModal.isShown}

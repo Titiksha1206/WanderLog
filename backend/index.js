@@ -138,7 +138,7 @@ app.post("/image-upload", upload.single("image"), async (req, res) => {
     if (!req.file){
      return res.status(400).json({error: true, message: "No Image Uploaded"});
     } 
-   const imageUrl = `http://localhost:8000/uploads/${req.file.path}`;
+   const imageUrl = `http://localhost:8000/${req.file.path}`;
    res.status(201).json({ imageUrl });
   }
   catch (error) {
