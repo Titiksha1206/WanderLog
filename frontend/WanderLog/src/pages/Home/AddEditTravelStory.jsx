@@ -14,11 +14,11 @@ const AddEditTravelStory = ({
     onClose,
     getAllTravelStories, 
 }) => {
-    const [title, setTitle] = useState("");
-    const [storyImg, setStoryImg] = useState(null);
-    const [story, setStory] = useState("");
-    const [visitedLocation, setVisitedLocation] = useState([]);
-    const [visitedDate, setVisitedDate] = useState(null);
+    const [title, setTitle] = useState(storyInfo?.title || "");
+    const [storyImg, setStoryImg] = useState(storyInfo?.imageUrl || null);
+    const [story, setStory] = useState(storyInfo?.story || "");
+    const [visitedLocation, setVisitedLocation] = useState(storyInfo?.visitedLocation || []);
+    const [visitedDate, setVisitedDate] = useState(storyInfo?.visitedDate || null);
     const [error, setError] = useState("");
 
     // Add new travel story
@@ -52,16 +52,59 @@ const AddEditTravelStory = ({
             }
         }
         catch(error){
-            console.error("Error adding new story:", error);
-            toast.error("Failed to add story ❌");
+            // console.error("Error adding new story:", error);
+            if(error.response && error.response.data && error.response.data.message){
+                setError(error.response.data.message);
+            }
+            else{
+                //handle unexpected error
+                setError("An unexpected error occurerd. please try again.")
+            }
         }
     };
 
     // Update travel story
     const updateTravelStory = async () => {
-        console.log("Updating story", { title, storyImg, story, visitedLocation, visitedDate });
-        //  logic to update the travel story 
-    };
+    console.log("Updating story", { title, storyImg, story, visitedLocation, visitedDate });
+    const storyId = storyInfo._id;
+    try {
+        let imageUrl = "";
+        let postData = {
+            title,
+            story,
+            imageUrl: storyInfo.imageUrl || "",
+            visitedLocation,
+            visitedDate: visitedDate
+                ? moment(visitedDate).valueOf()
+                : moment().valueOf(),
+        };
+
+        if (typeof storyImg === "object") {
+            // Upload new image
+            const imgUploadRes = await uploadImage(storyImg);
+            imageUrl = imgUploadRes.imageUrl || "";
+
+            postData = {
+                ...postData,
+                imageUrl: imageUrl,
+            };
+        }
+
+        const response = await axiosInstance.put("/edit-story/" + storyId, postData);
+
+        if (response.data && response.data.story) {
+            toast.success("Story updated successfully");
+            getAllTravelStories();
+            onClose();
+        }
+    } catch (error) {
+        if (error.response && error.response.data && error.response.data.message) {
+            setError(error.response.data.message);
+        } else {
+            setError("An unexpected error occurred. Please try again.");
+        }
+    }
+};
 
     const handleAddOrUpdateClick = () => {
         console.log("Input Data:", { title, storyImg, story, visitedLocation, visitedDate });
@@ -88,11 +131,35 @@ const AddEditTravelStory = ({
     // Delete story image and update the story
     const handleDeleteStoryImg = async () => {
         console.log("Deleting story image");
-        //  logic to delete the story 
+            // First, delete the existing image if needed
+            const deleteImgRes = await axiosInstance.delete("/delete-image", {
+              params: {
+                imageUrl: storyInfo.imageUrl, 
+              },
+            });
+        
+            if (deleteImgRes.data) {
+              const storyId = storyInfo._id; 
+        
+              const postData = {
+                title,
+                story,
+                visitedLocation,
+                visitedDate: moment().valueOf(),
+                imageUrl: "", // Set new image URL empty or upload a new one
+              };
+        
+              // Updating the story
+              const response = await axiosInstance.put("/edit-story/" + storyId, postData);
+        
+                setStoryImg(null); // Clear the selected image
+              
+            }
+         
     };
 
     return (
-        <div>
+        <div className='relative'>
             <div className="flex items-center justify-between">
                 <h5 className="text-xl font-medium text-slate-700">
                     {type === "add" ? "Add Story" : "Update Story"}
