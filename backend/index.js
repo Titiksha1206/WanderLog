@@ -168,7 +168,7 @@ app.delete("/delete-image", async (req, res) => {
     res.status(200).json({ message: "Image deleted successfully" });
   } 
   else {
-    res.status(200).json({ error: true, message: "Image not found" });
+    res.status(404).json({ error: true, message: "Image not found" });
   }
   } 
   catch (error) {
