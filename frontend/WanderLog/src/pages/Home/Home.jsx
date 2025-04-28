@@ -83,7 +83,7 @@ const Home = () => {
         { isFavourite: !storyData.isFavourite }
       );
       if (response.data && response.data.story) {
-        toast.success("story updated successfully");
+        toast.success("Favorites Updated");
         getAllTravelStories();
 
         //update favourite status
