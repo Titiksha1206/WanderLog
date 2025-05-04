@@ -146,13 +146,37 @@ const Home = () => {
   }
   
   //handle filter travel stories by date range
-  const filterStoriesByDate = async (day) => {};
+  const filterStoriesByDate = async (day) => {
+try{
+  const startDate = day.from ? moment(day.from).valueOf() : null;
+  const endDate = day.to ? moment(day.to).valueOf() : null;
+
+  if(startDate && endDate){
+    const response  = await axiosInstance.get("/travel-stories/filter", {
+      params: {startDate, endDate},
+    });
+
+    if(response.data && response.data.stories){
+      setFilterType("date");
+      setAllStories(response.data.stories);
+    }
+  }
+}catch(error){
+  console.log("An unexpected error occurred. Please try again.");
+}
+  };
   
   //handle date range select
-  const handleDayClick = ()=> {
+  const handleDayClick = (day)=> {
     setDateRange(day);
     filterStoriesByDate(day);
-  }
+  };
+
+  const resetFilter = ()=> {
+    setDateRange ({ from: null , to: null });
+    setFilterType("");
+    getAllTravelStories();
+  };
 
   useEffect(() => {
     getAllTravelStories();
@@ -163,7 +187,16 @@ const Home = () => {
   return (
     <>
       <Navbar userInfo={userInfo} searchQuery={searchQuery} setSearchQuery={setSearchQuery} onSearchNote={onSearchStory} handleClearSearch={handleClearSearch}/>
-      <div className="container mx-auto py-10">
+      <div className="container mx-auto py-10
+
+        <FilterInfoTitle
+         filterType = {filterType}
+        filterDates= {dateRange}
+        onClear={() =>{
+        resetFilter();
+        }}
+        />
+        
         <div className="flex gap-7">
           <div className="flex-1">
             {allStories.length > 0 ? (
