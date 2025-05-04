@@ -10,6 +10,7 @@ const Navbar = ({
   setSearchQuery,
   onSearchNote,
   handleClearSearch,
+  resetFilter,
 }) => {
   const isToken = localStorage.getItem("token");
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ const Navbar = ({
           setSearchQuery(""); // Clear the search input
           handleClearSearch(); // Fetch all travel stories
           navigate("/dashboard"); // Navigate to dashboard
+          resetFilter(); // Clear the date range
         }}
         className="cursor-pointer"
       >

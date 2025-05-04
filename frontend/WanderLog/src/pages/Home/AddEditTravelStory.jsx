@@ -4,7 +4,7 @@ import DateSelector from "../../components/Input/DateSelector" ;
 import ImageSelector from '../../components/Input/ImageSelector';
 import TagInput from '../../components/Input/TagInput';  
 import moment from 'moment';
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import axiosInstance from "../../utils/axiosInstance";
 import uploadImage from '../../utils/uploadImage';
 
@@ -44,7 +44,7 @@ const AddEditTravelStory = ({
                 : moment().valueOf(),
             });
             if(response.data && response.data.story){
-                toast.success("story added successfully");
+                toast.success("Story Added Successfully");
                 //refresh stories
                 getAllTravelStories();
                 //close modal
@@ -93,7 +93,7 @@ const AddEditTravelStory = ({
         const response = await axiosInstance.put("/edit-story/" + storyId, postData);
 
         if (response.data && response.data.story) {
-            toast.success("Story updated successfully");
+            toast.success("Story Updated Successfully");
             getAllTravelStories();
             onClose();
         }
