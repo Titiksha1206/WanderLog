@@ -17,6 +17,8 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('');
 
+  const[dateRange, setDateRange] = useState({form: null, to: null});
+
   const [openAddEditModal, setOpenAddEditModal] = useState({
     isShown: false,
     type: "add",
@@ -142,6 +144,15 @@ const Home = () => {
      getAllTravelStories();
 
   }
+  
+  //handle filter travel stories by date range
+  const filterStoriesByDate = async (day) => {};
+  
+  //handle date range select
+  const handleDayClick = ()=> {
+    setDateRange(day);
+    filterStoriesByDate(day);
+  }
 
   useEffect(() => {
     getAllTravelStories();
@@ -180,7 +191,18 @@ const Home = () => {
             )}
           </div>
 
-          <div className="w-[320px]"></div>
+          <div className="w-[320px]">
+            <div className= "bg-white border border-slate-200 shadow-lg shadow-slate-200/60 rounded-lg">
+              <div className="p-3">
+                <DayPicker
+                  captionLayout="dropdown-buttons"
+                  mode="range"
+                  selected={dateRange}
+                  onSelect={handleDayClick}
+                  pagedNavigation
+                  />
+                </div></div>
+          </div>
         </div>
       </div>
 
