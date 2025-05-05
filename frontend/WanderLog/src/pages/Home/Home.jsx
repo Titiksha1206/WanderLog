@@ -10,7 +10,7 @@ import AddEditTravelStory from "../Home/AddEditTravelStory";
 import ViewTravelStory from "../Home/ViewTravelStory";
 import { DayPicker } from "react-day-picker";
 import moment from "moment";
-//import FilterInfoTitle from "";
+import FilterInfoTitle from "../../components/Cards/FilterInfoTitle";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -88,8 +88,17 @@ const Home = () => {
       );
       if (response.data && response.data.story) {
         toast.success("Favorites Updated");
-        getAllTravelStories();
 
+        if(filterType === "search" && searchQuery){
+          onSearchStory(searchQuery);
+        }
+        else if(filterType === "date"){
+          filterStoriesByDate(dateRange);
+        }
+        else{
+          getAllTravelStories();
+        }
+        
         //update favourite status
         setFavouriteStatus(response.data.success);
       }
@@ -130,6 +139,7 @@ const Home = () => {
       });
 
       if (response.data && response.data.stories) {
+        setDateRange({ from: null, to: null }); // ✅ Reset date range
         setFilterType("search");
         setAllStories(response.data.stories);
       }
@@ -167,6 +177,7 @@ const Home = () => {
   //handle date range select
   const handleDayClick = (day) => {
     setDateRange(day);
+    setSearchQuery(""); // ✅ Clear the search bar
     filterStoriesByDate(day);
   };
 
@@ -190,6 +201,7 @@ const Home = () => {
         setSearchQuery={setSearchQuery}
         onSearchNote={onSearchStory}
         handleClearSearch={handleClearSearch}
+        resetFilter={resetFilter} 
       />
       <div className="container mx-auto py-10">
         <FilterInfoTitle
